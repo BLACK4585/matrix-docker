@@ -1,0 +1,21 @@
+synapse.matrix.example.com {
+	reverse_proxy <IP_SYNAPSE_DOCKER_HOST>:8008
+}
+
+web.matrix.example.com {
+	reverse_proxy <IP_ELEMENT-WEB_DOCKER_HOST>:81
+}
+
+matrix.example.com {
+	handle_path /.well-known/matrix/server {
+		header Content-Type application/json
+		header Access-Control-Allow-Origin *
+		respond "{\"m.server\": \"synapse.matrix.example.com:443\"}" 200
+	}
+
+	handle_path /.well-known/matrix/client {
+		header Content-Type application/json
+		header Access-Control-Allow-Origin *
+		respond "{\"m.homeserver\": {\"base_url\": \"https://synapse.matrix.example.com\"}}" 200
+	}
+}
