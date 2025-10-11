@@ -2,6 +2,17 @@ version: '3'
 
 services:
 
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+      - "443:443/udp"
+    volumes:
+      - <CONFIG_PATH>/caddy/data:/data
+      - <CONFIG_PATH>/caddy/config:/config
+      - <CONFIG_PATH>/caddy/Caddyfile:/etc/caddy/Caddyfile
 
   synapse:
     image: "matrixdotorg/synapse:${SYNAPSE_VERSION}"

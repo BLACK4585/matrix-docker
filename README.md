@@ -47,7 +47,7 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 49160-49200    UDP      # Turnserver UDP Range
 3478           TCP/UDP  # Turnserver default Port
 80             TCP      # Caddy HTTP ACME challenges
-443            TCP      # Caddy default HTTPS for Matrix traffic
+443            TCP/UDP  # Caddy default HTTPS for (Matrix) traffic
 ```
 
 ---
