@@ -64,37 +64,20 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-6. Edit `/var/lib/docker/volumes/matrix_nginx_conf/_data/default.conf` and add these lines in the bottom
-   of the file before `}`, then change the `example.com` to your domain.
-
-```
-    location /.well-known/matrix/server {
-        access_log off;
-        add_header Access-Control-Allow-Origin *;
-        default_type application/json;
-        return 200 '{"m.server": "matrix.example.com:443"}';
-    }
-
-    location /.well-known/matrix/client {
-        access_log off;
-        add_header Access-Control-Allow-Origin *;
-        default_type application/json;
-        return 200 '{"m.homeserver": {"base_url": "https://matrix.example.com"}}';
-    }
-```
+6. Edit `<CONFIG_PATH>/caddy/Caddyfile` and replace every `example.com` with your domain.
 
 ---
 
-7. Edit the `/var/lib/docker/volumes/matrix_coturn/_data/turnserver.conf` and add the below configuration:
+7. Edit `<CONFIG_PATH>/matrix/coturn/_data/turnserver.conf` and apply the below configuration:
 
-- Replace the `LongSecretKeyMustEnterHere` with a secure random password.
-- Replace `matrix.example.com` with your domain
-- Change the `YourServerIP` to your server's public IP address.
+- Replace `<LONG_SECRET_KEY>` with a secure random password.
+- Replace `<example.com>` with your domain.
+- Change `<YOUR_SERVER_IP>` to your server's public IP address.
 
 ```
 use-auth-secret
-static-auth-secret=LongSecretKeyMustEnterHere
-realm=matrix.example.com
+static-auth-secret=<LONG_SECRET_KEY>
+realm=synapse.matrix.<example.com>
 listening-port=3478
 tls-listening-port=5349
 min-port=49160
@@ -102,21 +85,22 @@ max-port=49200
 verbose
 allow-loopback-peers
 cli-password=SomePasswordForCLI
-external-ip=YourServerIP
+external-ip=<YOUR_SERVER_IP>
 ```
 
 ---
 
-8. Change the `example.com` with your domain in the below command and run it
+8. Replace the `<example.com>` with your domain in the below command and run it
 ```
-docker run -it --rm -v matrix_synapse_data:/data -e SYNAPSE_SERVER_NAME=example.com -e SYNAPSE_REPORT_STATS=yes matrixdotorg/synapse:latest generate
+docker run -it --rm -v <CONFIG_PATH>/matrix/synapse:/data -e SYNAPSE_SERVER_NAME=<example.com> -e SYNAPSE_REPORT_STATS=no matrixdotorg/synapse:latest generate
 ```
 
 ---
 
-9. Edit `/var/lib/docker/volumes/matrix_synapse_data/_data/homeserver.yaml` file and change it as below:
+9. Edit `<CONFIG_PATH>/matrix/synapse/_data/homeserver.yaml` and change it as below:
 
 - You need to replace the database config with PostgreSQL
+- Replace `<COMPLEX_PASSWORD>` with a secure random password.
 
 Don't worry about the database security, this is not going to be exposed to the internet.
 
@@ -126,72 +110,77 @@ database:
   txn_limit: 10000
   args:
     user: synapse
-    password: aComplexPassphraseNobodyCanGuess
+    password: <COMPLEX_PASSWORD>
     database: synapse
-    host: matrix_synapse_db_1
+    host: matrix-synapse_db-1
     port: 5432
     cp_min: 5
     cp_max: 10
 ```
 
 - Add below configuration to the end of the file
-- Change all `example.com` to your domain address.
-- Change `LongSecretKeyMustEnterHere` to the secret key that you chose before in `/var/lib/docker/volumes/matrix_coturn/_data/turnserver.conf`
+- Change every `<example.com>` to your domain address.
+- Change `<LONG_SECRET_KEY>` to the secret key that you chose before in `<CONFIG_PATH>/matrix/coturn/_data/turnserver.conf`
 
 ```
 turn_uris:
-  - "turn:matrix.example.com:3478?transport=udp"
-  - "turn:matrix.example.com:3478?transport=tcp"
-  - "turns:matrix.example.com:3478?transport=udp"
-  - "turns:matrix.example.com:3478?transport=tcp"
-turn_shared_secret: "LongSecretKeyMustEnterHere"
+  - "turn:matrix.<example.com>:3478?transport=udp"
+  - "turn:matrix.<example.com>:3478?transport=tcp"
+  - "turns:matrix.<example.com>:3478?transport=udp"
+  - "turns:matrix.<example.com>:3478?transport=tcp"
+turn_shared_secret: "<LONG_SECRET_KEY>"
 turn_user_lifetime: 86400000
 turn_allow_guests: False
 ```
+> [!NOTE]  
+> If you host your Turn server somewhere else or want to use an existing one replace the domains with your respective domain pointing to your Turn server.
 
 ---
 
 10. Run the containers with `docker-compose up` and if everything goes well, stop them
-   and run the `docker-compose up -d` to run these containers in the background.
+   and run `docker-compose up -d` to run the containers in the background.
 
 # Testing
 
-1. The matrix URL (`https://matrix.example.com`) must show the synapse default page
+1. The matrix URL (`https://synapse.matrix.example.com`) must show the synapse default page
 2. Nginx must respond to these two URLs
-   - https://example.com/.well-known/matrix/client
-   - https://example.com/.well-known/matrix/server
+   - https://matrix.example.com/.well-known/matrix/client
+   - https://matrix.example.com/.well-known/matrix/server
 3. You can test the federation on the link below
    - https://federationtester.matrix.org/
-4. You can log in to your Element client at `https://web.example.com`
+4. You can log in to your Element client at `https://web.matrix.example.com`
 
 # Add new user
 
 Run the below command to create a user.
 
 ```
-docker exec -it matrix_synapse_1 register_new_matrix_user -c /data/homeserver.yaml http://localhost:8008
+docker exec -it matrix-synapse-1 register_new_matrix_user -c /data/homeserver.yaml http://localhost:8008
 ```
 
 # Enable the registration
 
 By default, registration is disabled, and users must be added using the command line. If you want to allow
-everybody to register in your matrix, you can add the below line to the end of `/var/lib/docker/volumes/matrix_synapse_data/_data/homeserver.yaml` file.
+everybody to register in your matrix, you can add the below line to the end of `<CONFIG_PATH>/matrix/synapse/_data/homeserver.yaml` file.
 
 ```
 enable_registration: true
 enable_registration_without_verification: true
 ```
 
-Run the `docker-compose restart` to apply the new setting.
+Run `docker-compose restart` to apply the new setting.
 
 If you need to have email verification enabled or a captcha on registration, you can read the link below:
 
 https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html#registration
 
-## For more information, you can watch the tutorials.
+# For more information, you can watch the tutorials
 
 https://www.youtube.com/watch?v=JCsw1bbBjAM
 
 https://matrix.org/docs/guides/understanding-synapse-hosting
 
 https://gist.github.com/matusnovak/37109e60abe79f4b59fc9fbda10896da?permalink_comment_id=3626248#optional-turn-server-video-calls
+
+# Todo
+- [ ] Add Element Call
