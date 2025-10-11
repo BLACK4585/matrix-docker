@@ -1,55 +1,19 @@
 version: '3'
 
 services:
-  traefik:
-    image: "traefik:${TRAEFIK_VERSION}"
-    restart: "always"
-    command:
-      - "--api=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--certificatesresolvers.letls.acme.email=admin@${DOMAIN}"
-      - "--certificatesresolvers.letls.acme.storage=/certs/acme.json"
-      - "--certificatesresolvers.letls.acme.httpchallenge=true"
-      - "--certificatesresolvers.letls.acme.httpchallenge.entrypoint=web"
-    ports:
-      - "443:443"
-      - "80:80"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - traefik_certs:/certs
 
-  nginx:
-    image: "nginx:${NGINX_VERSION}"
-    restart: "always"
-    volumes:
-      - nginx_conf:/etc/nginx/conf.d
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.nginx.entrypoints=websecure
-      - traefik.http.routers.nginx.rule=Host(`${DOMAIN}`)
-      - traefik.http.routers.nginx.tls=true
-      - traefik.http.routers.nginx.tls.certresolver=letls
 
   synapse:
-    image: "docker.io/matrixdotorg/synapse:${SYNAPSE_VERSION}"
+    image: "matrixdotorg/synapse:${SYNAPSE_VERSION}"
     restart: unless-stopped
     environment:
       - SYNAPSE_CONFIG_PATH=/data/homeserver.yaml
     volumes:
-      - synapse_data:/data
+      - <CONFIG_PATH>/matrix/synapse:/data
     depends_on:
       - synapse_db
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.synapse.entrypoints=websecure
-      - traefik.http.routers.synapse.rule=Host(`matrix.${DOMAIN}`)
-      - traefik.http.routers.synapse.tls=true
-      - traefik.http.routers.synapse.tls.certresolver=letls
+    ports:
+      - "8008:8008"
 
   synapse_db:
     image: "docker.io/postgres:${POSTGRES_VERSION}"
@@ -59,34 +23,36 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
     volumes:
-      - synapse_db_data:/var/lib/postgresql/data
+      - <CONFIG_PATH>/matrix/postgres:/var/lib/postgresql/data
 
   coturn:
     image: "instrumentisto/coturn:${COTURN_VERSION}"
-    restart: "unless-stopped"
+    restart: unless-stopped
     volumes:
-      - coturn:/etc/coturn
+      - <CONFIG_PATH>/matrix/coturn:/etc/coturn
     ports:
       - "49160-49200:49160-49200/udp"
-      - "3478:3478"
+      - "3478:3478/tcp"
+      - "3478:3478/udp"
       - "5349:5349"
 
   element:
     image: "vectorim/element-web:${ELEMENT_VERSION}"
     restart: unless-stopped
-    volumes:
-      - element:/app
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.element.entrypoints=websecure
-      - traefik.http.routers.element.rule=Host(`web.${DOMAIN}`)
-      - traefik.http.routers.element.tls=true
-      - traefik.http.routers.element.tls.certresolver=letls
-      - traefik.http.services.element.loadbalancer.server.port=80
-volumes:
-  traefik_certs:
-  nginx_conf:
-  synapse_data:
-  synapse_db_data:
-  coturn:
-  element:
+    # Unless you need to customize the branding or something else
+    # of your Element Web app, you don't need a custom config.
+    # https://hub.docker.com/r/vectorim/element-web#running-from-docker
+    #volumes:
+      #- <CONFIG_PATH>/matrix/element:/app
+    ports:
+      - "81:80"
+
+  synapse-admin:
+    image: "awesometechnologies/synapse-admin"
+    restart: unless-stopped
+    depends_on:
+      - synapse
+    environment:
+      - REACT_APP_SERVER=http://synapse:8008
+    ports:
+      - "8080:80"
