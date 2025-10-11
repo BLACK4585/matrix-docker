@@ -41,19 +41,30 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-2. Clone the repository and go to the `matrix` directory
+2. Open the following ports respectively for your setup for your server:
+```
+5349           TCP      # Turnserver additional Port
+49160-49200    UDP      # Turnserver UDP Range
+3478           TCP/UDP  # Turnserver default Port
+80             TCP      # Caddy HTTP ACME challenges
+443            TCP      # Caddy default HTTPS for Matrix traffic
+```
 
 ---
 
-3. Copy `.env.example` to `.env` and change `DOMAIN` in `.env` file to your domain
+3. Clone the repository and go to the `./matrix` directory
 
 ---
 
-4. Run ``docker-compose up`` and after 1 minute stop it to do the next action.
+4. Copy `.env.example` to `.env` and change `DOMAIN` in `.env` file to your domain
 
 ---
 
-5. Edit the `/var/lib/docker/volumes/matrix_nginx_conf/_data/default.conf` and add these lines in the bottom
+5. Run ``docker-compose up`` and after 1 minute stop it to do the next action.
+
+---
+
+6. Edit `/var/lib/docker/volumes/matrix_nginx_conf/_data/default.conf` and add these lines in the bottom
    of the file before `}`, then change the `example.com` to your domain.
 
 ```
@@ -74,7 +85,7 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-6. Edit the `/var/lib/docker/volumes/matrix_coturn/_data/turnserver.conf` and add the below configuration:
+7. Edit the `/var/lib/docker/volumes/matrix_coturn/_data/turnserver.conf` and add the below configuration:
 
 - Replace the `LongSecretKeyMustEnterHere` with a secure random password.
 - Replace `matrix.example.com` with your domain
@@ -96,14 +107,14 @@ external-ip=YourServerIP
 
 ---
 
-7. Change the `example.com` with your domain in the below command and run it
+8. Change the `example.com` with your domain in the below command and run it
 ```
 docker run -it --rm -v matrix_synapse_data:/data -e SYNAPSE_SERVER_NAME=example.com -e SYNAPSE_REPORT_STATS=yes matrixdotorg/synapse:latest generate
 ```
 
 ---
 
-8. Edit `/var/lib/docker/volumes/matrix_synapse_data/_data/homeserver.yaml` file and change it as below:
+9. Edit `/var/lib/docker/volumes/matrix_synapse_data/_data/homeserver.yaml` file and change it as below:
 
 - You need to replace the database config with PostgreSQL
 
@@ -140,7 +151,7 @@ turn_allow_guests: False
 
 ---
 
-9. Run the containers with `docker-compose up` and if everything goes well, stop them
+10. Run the containers with `docker-compose up` and if everything goes well, stop them
    and run the `docker-compose up -d` to run these containers in the background.
 
 # Testing
