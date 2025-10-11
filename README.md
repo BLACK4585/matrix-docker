@@ -10,7 +10,6 @@ You can set up all you need for the matrix in less than an hour. It will install
 - Element
 - PostgreSQL
 - Coturn
-- Nginx
 - Caddy
 
 > [!NOTE]  
