@@ -25,7 +25,7 @@ You can set up all you need for the matrix in less than an hour. It will install
 # Requirements
 
 - Docker
-- Docker-compose
+- Docker Compose Plugin
 
 # Installation
 1. Add these two subdomains to your DNS:
@@ -41,7 +41,7 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-2. Open the following ports respectively for your setup for your server:
+2. Open the following ports respectively for your setup on your server:
 ```
 5349           TCP      # Turnserver additional Port
 49160-49200    UDP      # Turnserver UDP Range
@@ -60,7 +60,7 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-5. Run ``docker-compose up`` and after 1 minute stop it to do the next action.
+5. Run ``docker compose up`` and after 1 minute stop it to do the next action.
 
 ---
 
@@ -137,8 +137,8 @@ turn_allow_guests: False
 
 ---
 
-10. Run the containers with `docker-compose up` and if everything goes well, stop them
-   and run `docker-compose up -d` to run the containers in the background.
+10. Run the containers with `docker compose up` and if everything goes well, stop them
+   and run `docker compose up -d` to run the containers in the background.
 
 # Testing
 
@@ -158,7 +158,7 @@ Run the below command to create a user.
 docker exec -it matrix-synapse-1 register_new_matrix_user -c /data/homeserver.yaml http://localhost:8008
 ```
 
-# Enable the registration
+# Enable registration
 
 By default, registration is disabled, and users must be added using the command line. If you want to allow
 everybody to register in your matrix, you can add the below line to the end of `<CONFIG_PATH>/matrix/synapse/_data/homeserver.yaml` file.
@@ -168,7 +168,7 @@ enable_registration: true
 enable_registration_without_verification: true
 ```
 
-Run `docker-compose restart` to apply the new setting.
+Run `docker compose restart` to apply the new setting.
 
 If you need to have email verification enabled or a captcha on registration, you can read the link below:
 
