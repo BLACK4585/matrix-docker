@@ -14,7 +14,7 @@ You can set up all you need for the matrix in less than an hour. It will install
 
 > [!NOTE]  
 > There are many different ways to install Matrix and its dependencies. In this tutorial we will use Caddy as a reverse proxy and webserver.
-> I assume you have nothing currently installed, so we install all neccessary tools throughout the tutorial. If you already got e. g. Caddy running, you can just adapt your Caddyfile.
+> I assume you have nothing but Docker and ComposeV2 currently installed, so we install all neccessary tools throughout the tutorial. If you already got e. g. Caddy running, you can just adapt your Caddyfile.
 > If you want to use Traefik with NGINX you can find some config examples in the [original Repository](https://github.com/kamyargerami/matrix-docker).
 
 > [!IMPORTANT]  
