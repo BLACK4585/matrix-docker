@@ -11,7 +11,16 @@ You can set up all you need for the matrix in less than an hour. It will install
 - PostgreSQL
 - Coturn
 - Nginx
-- Traefik
+- Caddy
+
+> [!NOTE]  
+> There are many different ways to install Matrix and its dependencies. In this tutorial we will use Caddy as a reverse proxy and webserver.
+> I assume you have nothing currently installed, so we install all neccessary tools throughout the tutorial. If you already got e. g. Caddy running, you can just adapt your Caddyfile.
+> If you want to use Traefik with NGINX you can find some config examples in the [original Repository](https://github.com/kamyargerami/matrix-docker).
+
+> [!IMPORTANT]  
+> I forked the original Repository since I wanted to use my own exisiting webserver and infrastructure. But also there are some issues in the tutorial and config files which are fixed here. Keep that in mind if you mix and match some config files, e.g. for NGINX and adapt everything accordingly.
+
 
 # Requirements
 
@@ -23,8 +32,12 @@ You can set up all you need for the matrix in less than an hour. It will install
 
 ```
 matrix.example.com
-web.example.com
+synapse.matrix.example.com
+web.matrix.example.com
 ```
+> [!NOTE]
+> In this tutorial we will give the whole Matrix infrastructure its own subdomain (...**matrix**.example.com).
+If you want to use your root domain, remove `matrix.` from every URL you see in this tutorial accordingly.
 
 ---
 
