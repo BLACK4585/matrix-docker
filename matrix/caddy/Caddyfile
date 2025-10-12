@@ -19,3 +19,27 @@ matrix.<example.com> {
 		respond "{\"m.homeserver\": {\"base_url\": \"https://synapse.matrix.<example.com>\"}}" 200
 	}
 }
+
+rtc.matrix.<example.com> {
+	crowdsec
+	handle_path /livekit/jwt/* {
+		reverse_proxy <IP_JWT_DOCKER_HOST>:8080 {
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+		}
+	}
+
+	handle_path /livekit/sfu/* {
+		reverse_proxy <IP_LIVEKIT_DOCKER_HOST>:7880 {
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up Accept-Encoding gzip
+			header_up Upgrade {>Upgrade}
+			header_up Connection {>Connection}
+			transport http {
+				read_timeout 120s
+				write_timeout 120s
+			}
+		}
+	}
+}
