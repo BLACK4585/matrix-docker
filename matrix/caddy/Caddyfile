@@ -1,9 +1,9 @@
 synapse.matrix.<example.com> {
-	reverse_proxy <IP_SYNAPSE_DOCKER_HOST>:8008
+	reverse_proxy synapse:8008
 }
 
 web.matrix.<example.com> {
-	reverse_proxy <IP_ELEMENT-WEB_DOCKER_HOST>:81
+	reverse_proxy element:80
 }
 
 matrix.<example.com> {
@@ -21,16 +21,15 @@ matrix.<example.com> {
 }
 
 rtc.matrix.<example.com> {
-	crowdsec
 	handle_path /livekit/jwt/* {
-		reverse_proxy <IP_JWT_DOCKER_HOST>:8080 {
+		reverse_proxy jwt:8080 {
 			header_up Host {host}
 			header_up X-Real-IP {remote_host}
 		}
 	}
 
 	handle_path /livekit/sfu/* {
-		reverse_proxy <IP_LIVEKIT_DOCKER_HOST>:7880 {
+		reverse_proxy livekit:7880 {
 			header_up Host {host}
 			header_up X-Real-IP {remote_host}
 			header_up Accept-Encoding gzip

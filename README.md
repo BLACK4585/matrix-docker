@@ -6,11 +6,15 @@ This repository helps you run your messaging application.
 
 You can set up all you need for the matrix in less than an hour. It will install the following applications for you.
 
-- Synapse
-- Element
-- PostgreSQL
-- Coturn
-- Caddy
+- Synapse (Matrix Server)
+- Element-web (Matrix web client)
+- PostgreSQL (Database)
+- Coturn (Turn server)
+- Caddy (Reverse Proxy with automatic HTTPS and Webserver)
+- Matrix JWT Server (Authentication Server for Element Call)
+- Livekit server (Communication Server for Element Call)
+- Synapse Admin (Web admin dashboard for Synapse)
+
 > [!NOTE]
 > In this tutorial we will set up the new Element Call system as well as the old Turn system. The new Element Call is only supported by Element with the right flags and the new Element X App. But I personally don't like this app (yet) since it lacks a lot of features compared to Element Classic.
 So I would recommend using Element Classic for now. On your desktop you can then use the new Element Call while on your phone the old system still works.
@@ -68,10 +72,6 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 - Change every `<example.com>` in the `docker-compose.yml` and `./caddy/Caddyfile` to your domain.
 - Run `tr -dc 'a-zA-Z0-9' </dev/urandom | head -c 64` in your terminal and insert the output in `<SUPER_SECRET_KEY>` in the `docker-compose.yml` and `./livekit/config.yaml`
 - Run `tr -dc 'a-zA-Z0-9' </dev/urandom | head -c 64` in your terminal and insert the output in `<SUPER_SECRET_SECRET>` in the `docker-compose.yml` and `./livekit/config.yaml`
-- Replace `<IP_SYNAPSE_DOCKER_HOST>` in `./caddy/Caddyfile` to the internal IP of the Docker host, where your Synapse container is running
-- Replace `<IP_ELEMENT-WEB_DOCKER_HOST>` in `./caddy/Caddyfile` to the internal IP of the Docker host, where your Element-web container is running
-- Replace `<IP_JWT_DOCKER_HOST>` in `./caddy/Caddyfile` to the internal IP of the Docker host, where your JWT container is running
-- Replace `<IP_LIVEKIT_DOCKER_HOST>` in `./caddy/Caddyfile` to the internal IP of the Docker host, where your Livekit container is running
 
 
 ---
@@ -104,12 +104,12 @@ external-ip=<YOUR_SERVER_IP>
 
 ### 7. Replace `<example.com>` with your domain in the following command and run it
 ```
-docker run -it --rm -v ./matrix/synapse:/data -e SYNAPSE_SERVER_NAME=<example.com> -e SYNAPSE_REPORT_STATS=no matrixdotorg/synapse:latest generate
+docker run -it --rm -v ./synapse:/data -e SYNAPSE_SERVER_NAME=<example.com> -e SYNAPSE_REPORT_STATS=no matrixdotorg/synapse:latest generate
 ```
 
 ---
 
-### 8. Edit `./matrix/synapse/_data/homeserver.yaml` and change it as below:
+### 8. Edit `./matrix/synapse/homeserver.yaml` and change it as below:
 
 - You need to replace the database config with PostgreSQL
 - Replace `<COMPLEX_PASSWORD>` with the `POSTGRES_PASSWORD` you set in your `.env`.
@@ -124,7 +124,7 @@ database:
     user: synapse
     password: <COMPLEX_PASSWORD>
     database: synapse
-    host: matrix-synapse_db-1
+    host: synapse_db
     port: 5432
     cp_min: 5
     cp_max: 10
@@ -155,7 +155,7 @@ experimental_features:
   # MSC4222 needed for syncv2 state_after. This allow clients to
   # correctly track the state of the room.
   msc4222_enabled: true
-  msc4140_enabled: true     
+  msc4140_enabled: true
 
 # The maximum allowed duration by which sent events can be delayed, as
 # per MSC4140.
@@ -191,8 +191,7 @@ rc_delayed_event_mgmt:
 
 ---
 
-### 10. Run the containers with `docker compose up` and if everything goes well, stop them
-   and run `docker compose up -d` to run the containers in the background.
+### 10. Run the containers with `docker compose up` and if everything goes well, stop them and run `docker compose up -d` to run the containers in the background.
 
 ---
 

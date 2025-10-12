@@ -1,5 +1,3 @@
-version: '3'
-
 services:
 
   caddy:
@@ -24,7 +22,7 @@ services:
     depends_on:
       - synapse_db
     ports:
-      - "8008:8008"
+      #- "8008:8008" Direct access through Caddy
 
   synapse_db:
     image: "docker.io/postgres:${POSTGRES_VERSION}"
@@ -53,7 +51,7 @@ services:
     volumes:
       - ./element/config.json:/app/config.json
     ports:
-      - "81:80"
+      #- "81:80" Direct access through Caddy
 
   synapse-admin:
     image: "awesometechnologies/synapse-admin"
@@ -65,7 +63,7 @@ services:
     ports:
       - "8080:80"
 
-  matrix-element-call-jwt:
+  jwt:
     image: "ghcr.io/element-hq/lk-jwt-service:latest"
     container_name: matrix-element-call-jwt
     hostname: matrix-element-call-jwt
@@ -77,15 +75,15 @@ services:
       - LIVEKIT_FULL_ACCESS_HOMESERVERS=matrix.<example.com>
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      #- "8080:8080" Direct access through Caddy
       
-  matrix-element-call-livekit:
+  livekit:
     image: "livekit/livekit-server:latest"
     container_name: matrix-element-call-livekit
     hostname: matrix-element-call-livekit
     command: --dev --config /etc/livekit.yaml
     ports:
-      - "7880:7880/tcp"
+      #- "7880:7880/tcp" Direct access through Caddy
       - "7881:7881/tcp"
       - "50100-50200:50100-50200/udp"
     restart: unless-stopped
