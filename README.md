@@ -51,11 +51,13 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-3. Clone the repository and go to the `./matrix` directory. In this tutorial, this is the place where all config files and folders live. If you want to use a different folder structure, copy and adopt the config files accordingly.
+3. Clone the repository and go to the `./matrix` directory. 
+> [!NOTE]
+> In this tutorial, this is the place where all config files and folders live. If you want to use a different folder structure, copy and adopt the config files accordingly.
 
 ---
 
-4. Copy `.env.example` to `.env` and change `<example.com>` in `DOMAIN` key to your domain and `<COMPLEX_PASSWORD>` in `POSTGRES_PASSWORD` to a strong password.
+4. Copy `.env.example` to `.env` and change `<example.com>` to your domain and `<COMPLEX_PASSWORD>` to a strong password.
 
 ---
 
@@ -89,7 +91,7 @@ external-ip=<YOUR_SERVER_IP>
 
 ---
 
-8. Replace the `<example.com>` with your domain in the following command and run it
+8. Replace `<example.com>` with your domain in the following command and run it
 ```
 docker run -it --rm -v ./matrix/synapse:/data -e SYNAPSE_SERVER_NAME=<example.com> -e SYNAPSE_REPORT_STATS=no matrixdotorg/synapse:latest generate
 ```
