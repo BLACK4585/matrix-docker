@@ -78,6 +78,7 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ### 5. Run ``docker compose up`` and after 1 minute stop it to do the next action.
 
+---
 
 ### 6. Create and edit `./matrix/coturn/_data/turnserver.conf` to apply the below configuration:
 
@@ -192,6 +193,8 @@ rc_delayed_event_mgmt:
 
 ### 10. Run the containers with `docker compose up` and if everything goes well, stop them
    and run `docker compose up -d` to run the containers in the background.
+
+---
 
 # Testing
 
