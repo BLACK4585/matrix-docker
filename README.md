@@ -67,7 +67,7 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-7. Edit `./matrix/coturn/_data/turnserver.conf` and apply the below configuration:
+7. Create and edit `./matrix/coturn/_data/turnserver.conf` to apply the below configuration:
 
 - Replace `<LONG_SECRET_KEY>` with a secure random password.
 - Replace `<example.com>` with your domain.
@@ -136,18 +136,30 @@ turn_allow_guests: False
 
 ---
 
-10. Run the containers with `docker compose up` and if everything goes well, stop them
+10. Edit `./matrix/element/config.json` and change the following values:
+- Replace `<example.com>` with your domain
+- Replace `<ISO_COUNTRY_CODE>` with your ISO 3166 alpha2 Country Code
+
+> [!NOTE]  
+> You can further customize the config and thus the functionality of your Element web client to your needs. You can find information about the config [here](https://github.com/element-hq/element-web/blob/develop/docs/config.md) and about the (beta) feature flags [here](https://github.com/element-hq/element-web/blob/develop/docs/labs.md)
+
+> [!WARNING]
+> This is my current config. There will be changes in the future from Element, especially regarding the feature flags. So I recommend reading through the config documentation and also the current lab features to see if something changed.
+
+---
+
+11. Run the containers with `docker compose up` and if everything goes well, stop them
    and run `docker compose up -d` to run the containers in the background.
 
 # Testing
 
-1. The matrix URL (`https://synapse.matrix.example.com`) must show the synapse default page
+1. The matrix URL (`https://synapse.matrix.<example.com>`) must show the synapse default page
 2. Nginx must respond to these two URLs
-   - https://matrix.example.com/.well-known/matrix/client
-   - https://matrix.example.com/.well-known/matrix/server
+   - https://matrix.<example.com>/.well-known/matrix/client
+   - https://matrix.<example.com>/.well-known/matrix/server
 3. You can test the federation on the link below
    - https://federationtester.matrix.org/
-4. You can log in to your Element client at `https://web.matrix.example.com`
+4. You can log in to your Element client at `https://web.matrix.<example.com>`
 
 # Add new user
 
