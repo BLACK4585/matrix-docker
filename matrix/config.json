@@ -1,0 +1,22 @@
+{
+    "default_server_config": {
+        "m.homeserver": {
+            "base_url": "https://synapse.matrix.<example.com>"
+        },
+        "m.identity_server": {
+            "base_url": "https://vector.im"
+        }
+    },
+    "features": {
+        "feature_latex_maths": true,
+        "feature_pinning": true,
+        "feature_location_share_live": true,
+        "feature_video_rooms": true,
+        "feature_ask_to_join": true
+    },
+    "default_country_code": "<ISO_COUNTRY_CODE>",
+    "default_theme": "dark",
+    "permalink_prefix": "https://web.matrix.<example.com>",
+    "mobile_guide_app_variant": "element-classic",
+    "force_verification": true
+}

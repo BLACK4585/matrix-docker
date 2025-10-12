@@ -50,11 +50,8 @@ services:
   element:
     image: "vectorim/element-web:${ELEMENT_VERSION}"
     restart: unless-stopped
-    # Unless you need to customize the branding or something else
-    # of your Element Web app, you don't need a custom config.
-    # https://hub.docker.com/r/vectorim/element-web#running-from-docker
-    #volumes:
-      #- <CONFIG_PATH>/matrix/element:/app
+    volumes:
+      - <CONFIG_PATH>/matrix/element/config.json:/app/config.json
     ports:
       - "81:80"
 
