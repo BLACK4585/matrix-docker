@@ -112,7 +112,7 @@ docker run -it --rm -v ./matrix/synapse:/data -e SYNAPSE_SERVER_NAME=<example.co
 ### 8. Edit `./matrix/synapse/_data/homeserver.yaml` and change it as below:
 
 - You need to replace the database config with PostgreSQL
-- Replace `<COMPLEX_PASSWORD>` with a secure random password.
+- Replace `<COMPLEX_PASSWORD>` with the `POSTGRES_PASSWORD` you set in your `.env`.
 
 Don't worry about the database security, this is not going to be exposed to the internet.
 
