@@ -51,11 +51,11 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-3. Clone the repository and go to the `./matrix` directory
+3. Clone the repository and go to the `./matrix` directory. In this tutorial, this is the place where all config files and folders live. If you want to use a different folder structure, copy and adopt the config files accordingly.
 
 ---
 
-4. Copy `.env.example` to `.env` and change `DOMAIN` in `.env` file to your domain
+4. Copy `.env.example` to `.env` and change `<example.com>` in `DOMAIN` key to your domain and `<COMPLEX_PASSWORD>` in `POSTGRES_PASSWORD` to a strong password.
 
 ---
 
@@ -63,11 +63,11 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-6. Edit `<CONFIG_PATH>/caddy/Caddyfile` and replace every `example.com` with your domain.
+6. Edit `./matrix/caddy/Caddyfile` and replace every `<example.com>` with your domain.
 
 ---
 
-7. Edit `<CONFIG_PATH>/matrix/coturn/_data/turnserver.conf` and apply the below configuration:
+7. Edit `./matrix/coturn/_data/turnserver.conf` and apply the below configuration:
 
 - Replace `<LONG_SECRET_KEY>` with a secure random password.
 - Replace `<example.com>` with your domain.
@@ -89,14 +89,14 @@ external-ip=<YOUR_SERVER_IP>
 
 ---
 
-8. Replace the `<example.com>` with your domain in the below command and run it
+8. Replace the `<example.com>` with your domain in the following command and run it
 ```
-docker run -it --rm -v <CONFIG_PATH>/matrix/synapse:/data -e SYNAPSE_SERVER_NAME=<example.com> -e SYNAPSE_REPORT_STATS=no matrixdotorg/synapse:latest generate
+docker run -it --rm -v ./matrix/synapse:/data -e SYNAPSE_SERVER_NAME=<example.com> -e SYNAPSE_REPORT_STATS=no matrixdotorg/synapse:latest generate
 ```
 
 ---
 
-9. Edit `<CONFIG_PATH>/matrix/synapse/_data/homeserver.yaml` and change it as below:
+9. Edit `./matrix/synapse/_data/homeserver.yaml` and change it as below:
 
 - You need to replace the database config with PostgreSQL
 - Replace `<COMPLEX_PASSWORD>` with a secure random password.
@@ -119,7 +119,7 @@ database:
 
 - Add below configuration to the end of the file
 - Change every `<example.com>` to your domain address.
-- Change `<LONG_SECRET_KEY>` to the secret key that you chose before in `<CONFIG_PATH>/matrix/coturn/_data/turnserver.conf`
+- Change `<LONG_SECRET_KEY>` to the secret key that you chose before in `./matrix/coturn/_data/turnserver.conf`
 
 ```
 turn_uris:
@@ -132,7 +132,7 @@ turn_user_lifetime: 86400000
 turn_allow_guests: False
 ```
 > [!NOTE]  
-> If you host your Turn server somewhere else or want to use an existing one replace the domains with your respective domain pointing to your Turn server.
+> If you host your Turn server somewhere else or want to use an existing one replace the **whole** domains with your respective domain pointing to your Turn server.
 
 ---
 
@@ -160,7 +160,7 @@ docker exec -it matrix-synapse-1 register_new_matrix_user -c /data/homeserver.ya
 # Enable registration
 
 By default, registration is disabled, and users must be added using the command line. If you want to allow
-everybody to register in your matrix, you can add the below line to the end of `<CONFIG_PATH>/matrix/synapse/_data/homeserver.yaml` file.
+everybody to register in your matrix, you can add the below line to the end of `./matrix/synapse/_data/homeserver.yaml` file.
 
 ```
 enable_registration: true

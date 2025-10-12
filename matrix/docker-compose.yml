@@ -10,9 +10,9 @@ services:
       - 443:443
       - "443:443/udp"
     volumes:
-      - <CONFIG_PATH>/caddy/data:/data
-      - <CONFIG_PATH>/caddy/config:/config
-      - <CONFIG_PATH>/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/data:/data
+      - ./caddy/config:/config
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
 
   synapse:
     image: "matrixdotorg/synapse:${SYNAPSE_VERSION}"
@@ -20,7 +20,7 @@ services:
     environment:
       - SYNAPSE_CONFIG_PATH=/data/homeserver.yaml
     volumes:
-      - <CONFIG_PATH>/matrix/synapse:/data
+      - ./synapse:/data
     depends_on:
       - synapse_db
     ports:
@@ -34,13 +34,13 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
     volumes:
-      - <CONFIG_PATH>/matrix/postgres:/var/lib/postgresql/data
+      - ./postgres:/var/lib/postgresql/data
 
   coturn:
     image: "instrumentisto/coturn:${COTURN_VERSION}"
     restart: unless-stopped
     volumes:
-      - <CONFIG_PATH>/matrix/coturn:/etc/coturn
+      - ./coturn:/etc/coturn
     ports:
       - "49160-49200:49160-49200/udp"
       - "3478:3478/tcp"
@@ -51,7 +51,7 @@ services:
     image: "vectorim/element-web:${ELEMENT_VERSION}"
     restart: unless-stopped
     volumes:
-      - <CONFIG_PATH>/matrix/element/config.json:/app/config.json
+      - ./element/config.json:/app/config.json
     ports:
       - "81:80"
 
