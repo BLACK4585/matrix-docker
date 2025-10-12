@@ -150,7 +150,7 @@ turn_allow_guests: False
 
 ---
 
-11. Run the containers with `docker compose up` and if everything goes well, stop them
+### 11. Run the containers with `docker compose up` and if everything goes well, stop them
    and run `docker compose up -d` to run the containers in the background.
 
 # Testing
