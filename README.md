@@ -27,7 +27,7 @@ You can set up all you need for the matrix in less than an hour. It will install
 - Docker Compose Plugin
 
 # Installation
-1. Add these two subdomains to your DNS:
+### 1. Add these two subdomains to your DNS:
 
 ```
 matrix.example.com
@@ -40,7 +40,7 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-2. Open the following ports respectively for your setup on your server:
+### 2. Open the following ports respectively for your setup on your server:
 ```
 5349           TCP      # Turnserver additional Port
 49160-49200    UDP      # Turnserver UDP Range
@@ -51,25 +51,25 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-3. Clone the repository and go to the `./matrix` directory. 
+### 3. Clone the repository and go to the `./matrix` directory. 
 > [!NOTE]
 > In this tutorial, this is the place where all config files and folders live. If you want to use a different folder structure, copy and adopt the config files accordingly.
 
 ---
 
-4. Copy `.env.example` to `.env` and change `<example.com>` to your domain and `<COMPLEX_PASSWORD>` to a strong password.
+### 4. Copy `.env.example` to `.env` and change `<example.com>` to your domain and `<COMPLEX_PASSWORD>` to a strong password.
 
 ---
 
-5. Run ``docker compose up`` and after 1 minute stop it to do the next action.
+### 5. Run ``docker compose up`` and after 1 minute stop it to do the next action.
 
 ---
 
-6. Edit `./matrix/caddy/Caddyfile` and replace every `<example.com>` with your domain.
+### 6. Edit `./matrix/caddy/Caddyfile` and replace every `<example.com>` with your domain.
 
 ---
 
-7. Create and edit `./matrix/coturn/_data/turnserver.conf` to apply the below configuration:
+### 7. Create and edit `./matrix/coturn/_data/turnserver.conf` to apply the below configuration:
 
 - Replace `<LONG_SECRET_KEY>` with a secure random password.
 - Replace `<example.com>` with your domain.
@@ -91,14 +91,14 @@ external-ip=<YOUR_SERVER_IP>
 
 ---
 
-8. Replace `<example.com>` with your domain in the following command and run it
+### 8. Replace `<example.com>` with your domain in the following command and run it
 ```
 docker run -it --rm -v ./matrix/synapse:/data -e SYNAPSE_SERVER_NAME=<example.com> -e SYNAPSE_REPORT_STATS=no matrixdotorg/synapse:latest generate
 ```
 
 ---
 
-9. Edit `./matrix/synapse/_data/homeserver.yaml` and change it as below:
+### 9. Edit `./matrix/synapse/_data/homeserver.yaml` and change it as below:
 
 - You need to replace the database config with PostgreSQL
 - Replace `<COMPLEX_PASSWORD>` with a secure random password.
@@ -138,7 +138,7 @@ turn_allow_guests: False
 
 ---
 
-10. Edit `./matrix/element/config.json` and change the following values:
+### 10. Edit `./matrix/element/config.json` and change the following values:
 - Replace `<example.com>` with your domain
 - Replace `<ISO_COUNTRY_CODE>` with your ISO 3166 alpha2 Country Code
 
