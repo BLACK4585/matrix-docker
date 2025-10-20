@@ -111,7 +111,7 @@ docker run -it --rm -v ./synapse:/data -e SYNAPSE_SERVER_NAME=<example.com> -e S
 
 ### 8. Edit `./matrix/synapse/homeserver.yaml` and change it as below:
 
-- You need to replace the database config with PostgreSQL
+- You need to replace the database config with PostgreSQL:
 - Replace `<COMPLEX_PASSWORD>` with the `POSTGRES_PASSWORD` you set in your `.env`.
 
 Don't worry about the database security, this is not going to be exposed to the internet.
@@ -243,3 +243,4 @@ https://gist.github.com/matusnovak/37109e60abe79f4b59fc9fbda10896da?permalink_co
 - https://github.com/element-hq/element-call/blob/livekit/docs/self-hosting.md#
 - https://hub.docker.com/r/vectorim/element-web#running-from-docker
 - https://github.com/element-hq/element-call/blob/livekit/docs/self-hosting.md?ref=element.io#Prerequisites
+- https://willlewis.co.uk/blog/posts/deploy-element-call-backend-with-synapse-and-docker-compose/

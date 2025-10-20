@@ -65,8 +65,7 @@ services:
 
   jwt:
     image: "ghcr.io/element-hq/lk-jwt-service:latest"
-    container_name: matrix-element-call-jwt
-    hostname: matrix-element-call-jwt
+    container_name: matrix-jwt
     environment:
       - LK_JWT_PORT=8080
       - LIVEKIT_URL=https://rtc.matrix.<example.com>/livekit/sfu
@@ -79,8 +78,7 @@ services:
       
   livekit:
     image: "livekit/livekit-server:latest"
-    container_name: matrix-element-call-livekit
-    hostname: matrix-element-call-livekit
+    container_name: matrix-livekit
     command: --dev --config /etc/livekit.yaml
     ports:
       #- "7880:7880/tcp" Direct access through Caddy
