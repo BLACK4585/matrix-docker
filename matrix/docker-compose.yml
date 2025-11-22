@@ -21,7 +21,7 @@ services:
       - ./synapse:/data
     depends_on:
       - synapse_db
-    ports:
+    #ports:
       #- "8008:8008" Direct access through Caddy
 
   synapse_db:
