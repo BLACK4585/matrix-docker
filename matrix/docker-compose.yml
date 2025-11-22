@@ -50,7 +50,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./element/config.json:/app/config.json
-    ports:
+    #ports:
       #- "81:80" Direct access through Caddy
 
   synapse-admin:
@@ -73,7 +73,7 @@ services:
       - LIVEKIT_SECRET=<SUPER_SECRET_SECRET>
       - LIVEKIT_FULL_ACCESS_HOMESERVERS=matrix.<example.com>
     restart: unless-stopped
-    ports:
+    #ports:
       #- "8080:8080" Direct access through Caddy
       
   livekit:
