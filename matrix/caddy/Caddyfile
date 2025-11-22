@@ -22,7 +22,7 @@ matrix.<example.com> {
 	}
 }
 
-rtc.matrix.devblack.de {
+rtc.matrix.<example.com> {
 	handle /sfu/get* {
 		reverse_proxy jwt:8080
 	}
