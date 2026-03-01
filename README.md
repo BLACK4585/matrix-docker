@@ -38,9 +38,8 @@ So I would recommend using Element Classic for now. On your desktop you can then
 
 ```
 matrix.<example.com>
-synapse.matrix.<example.com>
-web.matrix.<example.com>
-rtc.matrix.<example.com>
+livekit.matrix.<example.com>
+turn.<example.com>
 ```
 > [!NOTE]
 > In this tutorial we will give the whole Matrix infrastructure its own subdomain (...**matrix**.example.com).
@@ -50,8 +49,8 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ### 2. Open the following ports respectively for your setup on your server:
 ```
-5349           TCP      # Turnserver additional Port
-49160-49200    UDP      # Turnserver UDP Range
+5349           TCP      # Turnserver TLS Port
+49000-50000    UDP      # Turnserver UDP Range
 3478           TCP/UDP  # Turnserver default Port
 80             TCP      # Caddy HTTP ACME challenges
 443            TCP/UDP  # Caddy default HTTPS for (Matrix) traffic
@@ -80,25 +79,11 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 
 ---
 
-### 6. Create and edit `./matrix/coturn/_data/turnserver.conf` to apply the below configuration:
+### 6. Edit `./matrix/coturn/_data/turnserver.conf` to apply the below configuration:
 
 - Replace `<LONG_SECRET_KEY>` with a secure random password.
 - Replace `<example.com>` with your domain.
 - Change `<YOUR_SERVER_IP>` to your server's public IP address.
-
-```
-use-auth-secret
-static-auth-secret=<LONG_SECRET_KEY>
-realm=synapse.matrix.<example.com>
-listening-port=3478
-tls-listening-port=5349
-min-port=49160
-max-port=49200
-verbose
-allow-loopback-peers
-cli-password=SomePasswordForCLI
-external-ip=<YOUR_SERVER_IP>
-```
 
 ---
 
@@ -136,10 +121,10 @@ database:
 
 ```
 turn_uris:
-  - "turn:matrix.<example.com>:3478?transport=udp"
-  - "turn:matrix.<example.com>:3478?transport=tcp"
-  - "turns:matrix.<example.com>:3478?transport=udp"
-  - "turns:matrix.<example.com>:3478?transport=tcp"
+  - "turn:turn.<example.com>?transport=udp"
+  - "turn:turn.<example.com>?transport=tcp"
+  - "turns:turn.<example.com>?transport=udp"
+  - "turns:turn.<example.com>?transport=tcp"
 turn_shared_secret: "<LONG_SECRET_KEY>"
 turn_user_lifetime: 86400000
 turn_allow_guests: False

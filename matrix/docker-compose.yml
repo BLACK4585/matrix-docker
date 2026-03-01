@@ -16,7 +16,7 @@ services:
     image: "matrixdotorg/synapse:${SYNAPSE_VERSION}"
     restart: unless-stopped
     environment:
-      - SYNAPSE_CONFIG_PATH=/data/homeserver.yaml
+      - SYNAPSE_CONFIG_PATH=${SYNAPSE_CONFIG_PATH}
     volumes:
       - ./synapse:/data
     depends_on:
@@ -28,9 +28,9 @@ services:
     image: "docker.io/postgres:${POSTGRES_VERSION}"
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=synapse
+      - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+      - POSTGRES_INITDB_ARGS=${POSTGRES_INITDB_ARGS}
     volumes:
       - ./postgres:/var/lib/postgresql/data
 
@@ -39,11 +39,12 @@ services:
     restart: unless-stopped
     volumes:
       - ./coturn:/etc/coturn
-    ports:
-      - "49160-49200:49160-49200/udp"
-      - "3478:3478/tcp"
-      - "3478:3478/udp"
-      - "5349:5349"
+    network_mode: "host" # Needed because Coturn needs to expose port ranges
+    #ports:
+      #- "49000-50000:49000-50000/udp"
+      #- "3478:3478/tcp"
+      #- "3478:3478/udp"
+      #- "5349:5349"
 
   element:
     image: "vectorim/element-web:${ELEMENT_VERSION}"
@@ -54,24 +55,24 @@ services:
       #- "81:80" Direct access through Caddy
 
   synapse-admin:
-    image: "awesometechnologies/synapse-admin"
+    image: "etkecc/synapse-admin:${ADMIN_VERSION}"
     restart: unless-stopped
     depends_on:
       - synapse
     environment:
-      - REACT_APP_SERVER=http://synapse:8008
+      - REACT_APP_SERVER=${REACT_APP_SERVER}
     ports:
-      - "8080:80"
+      - "8081:8080"
 
   jwt:
-    image: "ghcr.io/element-hq/lk-jwt-service:latest"
+    image: "ghcr.io/element-hq/lk-jwt-service:${JWT_VERSION}"
     container_name: matrix-jwt
     environment:
-      - LK_JWT_PORT=8080
-      - LIVEKIT_URL=https://rtc.matrix.<example.com>/livekit/sfu
-      - LIVEKIT_KEY=<SUPER_SECRET_KEY>
-      - LIVEKIT_SECRET=<SUPER_SECRET_SECRET>
-      - LIVEKIT_FULL_ACCESS_HOMESERVERS=matrix.<example.com>
+      - LK_JWT_PORT=${LK_JWT_PORT}
+      - LIVEKIT_URL=${LIVEKIT_URL}
+      - LIVEKIT_KEY=${LIVEKIT_KEY}
+      - LIVEKIT_SECRET=${LIVEKIT_SECRET}
+      - LIVEKIT_FULL_ACCESS_HOMESERVERS=${LIVEKIT_FULL_ACCESS_HOMESERVERS}
     restart: unless-stopped
     #ports:
       #- "8080:8080" Direct access through Caddy
