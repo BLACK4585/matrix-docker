@@ -31,5 +31,6 @@ livekit.matrix.<example.com> {
 }
 
 turn.<example.com> {
+	# Needed for certificate generation
 	respond "TURN Server"
 }

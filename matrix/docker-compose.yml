@@ -39,6 +39,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./coturn:/etc/coturn
+      - ./coturn-certs:/certs
     network_mode: "host" # Needed because Coturn needs to expose port ranges
     #ports:
       #- "49000-50000:49000-50000/udp"

@@ -129,7 +129,7 @@ turn_uris:
   - "turns:turn.<example.com>?transport=tcp"
 turn_shared_secret: "<LONG_SECRET_KEY>"
 turn_user_lifetime: 86400000
-turn_allow_guests: False
+turn_allow_guests: false
 ```
 > [!NOTE]  
 > If you host your Turn server somewhere else or want to use an existing one replace the **whole** domains with your respective domain pointing to your Turn server.
@@ -180,7 +180,18 @@ rc_delayed_event_mgmt:
 
 ---
 
-### 10. Run the containers with `docker compose up` and if everything goes well, stop them and run `docker compose up -d` to run the containers in the background.
+### 10. Prepare TLS Certificates for coTURN
+Get the certificates from Caddy:
+1. Copy `./caddy/data/caddy/caddy_data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/turn.<example.com>/turn.<example.com>.crt` to `./coturn-certs`.
+2. Copy `./caddy/data/caddy/caddy_data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/turn.<example.com>/turn.<example.com>.key` to `./coturn-certs`.
+
+Prepare the certificates for coTURN:
+1. Run `openssl x509 -in ./coturn-certs/turn.<example.com>.crt -out ./coturn-certs/turn-cert.pem` in a terminal to convert the .crt to a .pem file coTURN can read.
+2. Rename `./coturn-certs/turn.<example.com>.key` to `./coturn-certs/turn-privkey.pem`
+
+---
+
+### 11. Run the containers with `docker compose up` and if everything goes well, stop them and run `docker compose up -d` to run the containers in the background.
 
 ---
 
@@ -224,6 +235,11 @@ https://www.youtube.com/watch?v=JCsw1bbBjAM
 https://matrix.org/docs/guides/understanding-synapse-hosting
 
 https://gist.github.com/matusnovak/37109e60abe79f4b59fc9fbda10896da?permalink_comment_id=3626248#optional-turn-server-video-calls
+
+# TODO
+- Certificates to Coturn script
+- Figure out the right permissions for the coTURN certificates
+
 
 # Credits
 - https://github.com/js-4 for the help creating this tutorial
