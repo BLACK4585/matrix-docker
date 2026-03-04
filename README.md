@@ -3,6 +3,9 @@
 # Setup Matrix with docker-compose
 
 This repository helps you run your messaging application.
+> [!NOTE]
+> As I recently cleaned up this guide, there might be some issues from the old version left.
+> If you find any issues or unclear instructions please open an issue!
 
 You can set up all you need for the matrix in less than an hour. It will install the following applications for you.
 
@@ -16,8 +19,7 @@ You can set up all you need for the matrix in less than an hour. It will install
 - Synapse Admin (Web admin dashboard for Synapse)
 
 > [!NOTE]
-> In this tutorial we will set up the new Element Call system as well as the old Turn system. The new Element Call is only supported by Element with the right flags and the new Element X App. But I personally don't like this app (yet) since it lacks a lot of features compared to Element Classic.
-So I would recommend using Element Classic for now. On your desktop you can then use the new Element Call while on your phone the old system still works.
+> In this tutorial we will set up the new Element Call system as well as the old Turn system. This is useful for users who might still use the old Element Classic App but also to make the new Livekit System more reliable.
 
 > [!NOTE]  
 > There are many different ways to install Matrix and its dependencies. In this tutorial we will use Caddy as a reverse proxy and webserver.
@@ -34,7 +36,7 @@ So I would recommend using Element Classic for now. On your desktop you can then
 - Docker Compose Plugin
 
 # Installation
-### 1. Add these two subdomains to your DNS:
+### 1. Add those two subdomains to your DNS:
 
 ```
 matrix.<example.com>
@@ -42,7 +44,7 @@ livekit.matrix.<example.com>
 turn.<example.com>
 ```
 > [!NOTE]
-> In this tutorial we will give the whole Matrix infrastructure its own subdomain (...**matrix**.example.com).
+> In this tutorial we will give the whole Matrix infrastructure its own subdomain (**matrix**.example.com).
 If you want to use your root domain, remove `matrix.` from every URL you see in this tutorial accordingly.
 
 ---
@@ -67,7 +69,7 @@ If you want to use your root domain, remove `matrix.` from every URL you see in 
 ---
 
 ### 4. Adjust the config files to your setup
-- Copy `.env.example` to `.env` and change `<example.com>` to your domain and `<COMPLEX_PASSWORD>` to a strong password.
+- Rename `.env.example` to `.env` and change `<example.com>` to your domain and `<COMPLEX_PASSWORD>` to a strong password.
 - Change every `<example.com>` in the `docker-compose.yml` and `./caddy/Caddyfile` to your domain.
 - Run `tr -dc 'a-zA-Z0-9' </dev/urandom | head -c 64` in your terminal and insert the output in `<SUPER_SECRET_KEY>` in the `docker-compose.yml` and `./livekit/config.yaml`
 - Run `tr -dc 'a-zA-Z0-9' </dev/urandom | head -c 64` in your terminal and insert the output in `<SUPER_SECRET_SECRET>` in the `docker-compose.yml` and `./livekit/config.yaml`
@@ -94,9 +96,8 @@ docker run -it --rm -v ./synapse:/data -e SYNAPSE_SERVER_NAME=<example.com> -e S
 
 ---
 
-### 8. Edit `./matrix/synapse/homeserver.yaml` and change it as below:
+### 8. Edit `./matrix/synapse/homeserver.yaml` and insert the snippets below:
 
-- You need to replace the database config with PostgreSQL:
 - Replace `<COMPLEX_PASSWORD>` with the `POSTGRES_PASSWORD` you set in your `.env`.
 
 Don't worry about the database security, this is not going to be exposed to the internet.
@@ -114,8 +115,9 @@ database:
     cp_min: 5
     cp_max: 10
 ```
+<br>
+<br>
 
-- Add below configuration to the end of the file
 - Change every `<example.com>` to your domain address.
 - Change `<LONG_SECRET_KEY>` to the secret key that you chose before in `./matrix/coturn/_data/turnserver.conf`
 
@@ -131,6 +133,8 @@ turn_allow_guests: False
 ```
 > [!NOTE]  
 > If you host your Turn server somewhere else or want to use an existing one replace the **whole** domains with your respective domain pointing to your Turn server.
+<br>
+<br>
 
 - For the new Element Call system you also need to append the following config:
 ```
@@ -182,13 +186,13 @@ rc_delayed_event_mgmt:
 
 # Testing
 
-1. The matrix URL (`https://synapse.matrix.<example.com>`) must show the synapse default page
-2. Nginx must respond to these two URLs
+1. The matrix URL (`https://matrix.<example.com>`) must show the Element login page
+2. Caddy must respond to these two URLs
    - https://matrix.<example.com>/.well-known/matrix/client
    - https://matrix.<example.com>/.well-known/matrix/server
 3. You can test the federation on the link below
    - https://federationtester.matrix.org/
-4. You can log in to your Element client at `https://web.matrix.<example.com>`
+4. You can log in to your Element client at `https://matrix.<example.com>`
 
 # Add new user
 
@@ -229,3 +233,5 @@ https://gist.github.com/matusnovak/37109e60abe79f4b59fc9fbda10896da?permalink_co
 - https://hub.docker.com/r/vectorim/element-web#running-from-docker
 - https://github.com/element-hq/element-call/blob/livekit/docs/self-hosting.md?ref=element.io#Prerequisites
 - https://willlewis.co.uk/blog/posts/deploy-element-call-backend-with-synapse-and-docker-compose/
+- https://continuwuity.org/calls/livekit
+- https://gabrieltanner.org/blog/turn-server/
