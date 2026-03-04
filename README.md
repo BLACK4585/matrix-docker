@@ -188,6 +188,7 @@ Get the certificates from Caddy:
 Prepare the certificates for coTURN:
 1. Run `openssl x509 -in ./coturn-certs/turn.<example.com>.crt -out ./coturn-certs/turn-cert.pem` in a terminal to convert the .crt to a .pem file coTURN can read.
 2. Rename `./coturn-certs/turn.<example.com>.key` to `./coturn-certs/turn-privkey.pem`
+3. Change the permissions of both .pem files to 777 with `chmod 777 ./coturn-certs/turn-<cert/privkey>.pem`
 
 ---
 
