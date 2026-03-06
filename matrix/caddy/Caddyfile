@@ -16,7 +16,7 @@ matrix.<example.com> {
 	reverse_proxy /_matrix/* synapse:8008
 	reverse_proxy /_synapse/client/* synapse:8008
 
-	reverse_proxy lemen:81
+	reverse_proxy element:81
 }
 
 livekit.matrix.<example.com> {
