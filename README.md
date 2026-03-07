@@ -36,13 +36,16 @@ You can set up all you need for the matrix in less than an hour. It will install
 - Docker Compose Plugin
 
 # Installation
-### 1. Add those two subdomains to your DNS:
+### 1. Add these three subdomains to your DNS:
 
 ```
 matrix.<example.com>
 livekit.matrix.<example.com>
 turn.<example.com>
 ```
+
+You could also leave away the `turn` subdomain and run coTURN over the `matrix` subdomain. I added the entry for visual clarification, as I use my coTURN in other services, too. Adding `matrix...` as a turn server domain in eg Nextcloud seems a bit off to me. As you can see in the Caddyfile nothing happens behind the `turn` subdomain, it's just there to get the SSL certificate and a DNS entry.
+If you leave the entry away and run coTURN using eg the `matrix` subdomain, remember to use it's certificate later on in the guide.
 > [!NOTE]
 > In this tutorial we will give the whole Matrix infrastructure its own subdomain (**matrix**.example.com).
 If you want to use your root domain, remove `matrix.` from every URL you see in this tutorial accordingly.
